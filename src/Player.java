@@ -1,5 +1,6 @@
-//0- paper, 1-scissors, 2- stone
+//interface of player
 
 public interface Player {
-    int show();
+    Option show();
+    Gamer get_name();
 }

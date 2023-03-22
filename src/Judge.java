@@ -1,50 +1,105 @@
-//0- Donkey, 1-Monkey, 2-Parrot
+//Judge is responsible for playing the game and presenting info about it
 public class Judge {
     private Player player1;
     private Player player2;
-    Judge(Player g1, Player g2)
+
+    private Gamer winner;
+
+    private Option option1;
+    private Option option2;
+
+    Judge(Player g1, Player g2) //constructor
     {
         player1= g1;
         player2=g2;
+        option1=Option.NONE;
+        option2=Option.NONE;
+        winner=Gamer.ANY;
     }
 
-    public int play()
+    //manage the game
+    public void play()
     {
-        boolean winner=false;
+        boolean over=false;
         int answer=-1;
-        while(winner==false)
+
+        while(over==false)
         {
-            int p1=player1.show();
-            int p2=player2.show();
+            Option p1=player1.show();
+            Option p2=player2.show();
 
-
-            if(p1==p2) continue;
-            //1- paper, 2-scissors, 3- stone
-            winner=true;
+            if(p1==p2) continue; //I made assumption that game always has to end with result other than draw
+            //warning- it means that two donkeys will play forever
+            over=true;
             switch(p1){
-                case 1:
-                    if(p2==2) answer=2;
-                    else if(p2==3) answer=1;
+                case PAPER:
+                    if(p2==Option.SCISSORS) answer=2;
+                    else if(p2==Option.STONE) answer=1;
                     break;
-                case 2:
-                    if(p2==1) answer=1;
-                    else if(p2==3) answer=2;
+                case SCISSORS:
+                    if(p2==Option.PAPER) answer=1;
+                    else if(p2==Option.STONE) answer=2;
                     break;
-                case 3:
-                    if(p2==1) answer=2;
-                    else if(p2==2) answer=1;
+                case STONE:
+                    if(p2==Option.PAPER) answer=2;
+                    else if(p2==Option.SCISSORS) answer=1;
                     break;
             }
-           /* if((p1==1)&&(p2==2)) answer=2;
-            else if((p1==2)&&(p2==1)) answer=1;
-            else if((p1==1)&&(p2==3)) answer=1;
-            else if((p1==3)&&(p2==1)) answer=2;
-            else if((p1==2)&&(p2==3)) answer=2;
-            else if((p1==3)&&(p2==2)) answer=1;
-*/
+            option1=p1;
+            option2=p2;
         }
-        return answer;
+
+        winner=who_won(answer);
+
     }
 
 
+   //checks who have won
+   private Gamer who_won(int number)
+   {
+       Gamer answer=Gamer.ANY;
+       if(number==1)
+       {
+               answer=player1.get_name();
+       }
+       else if(number==2)
+       {
+           answer=player2.get_name();
+       }
+
+       return answer;
+   }
+
+   public Option getOption1()
+   {
+       return option1;
+   } //returns option chosen by player 1
+
+    public Option getOption2()
+    {
+        return option2;
+    } //returns option chosen by player 2
+
+    public Gamer getPlayer1()
+    {
+        return player1.get_name();
+    } //returns name of player 1
+
+    public Gamer getPlayer2()
+    {
+        return player2.get_name();
+    }//returns name of player 2
+
+    public Gamer getWinner()
+    {
+        return winner;
+    }//returns name of winner
+
+    //displays info about the game
+    public void info()
+    {
+        System.out.println("Player 1: "+player1.get_name()+", player 2: "+player2.get_name());
+        System.out.println("Move 1:"+option1+", move 2: "+option2);
+        System.out.println("Winner: "+winner);
+    }
 }
